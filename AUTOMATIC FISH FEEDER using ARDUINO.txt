@@ -1,0 +1,41 @@
+
+#include <Servo.h>
+
+Servo myservo;
+const int servoPin = 7;  // Pin for servo control
+const long feedingInterval = 12 * 3600000;  // 12 hours in milliseconds
+const int servoDelay = 2000;  // Delay between servo movements
+const int servoMoveDuration = 15;  // Duration for servo movement
+unsigned long lastFeedTime = 0;
+
+void setup() {
+  myservo.attach(servoPin);
+  myservo.write(0);
+  delay(servoDelay);
+  lastFeedTime = millis();  // Initialize last feed time
+}
+
+void loop() {
+  unsigned long currentTime = millis();
+
+  if (currentTime - lastFeedTime >= feedingInterval) {
+    feedFish();  // Perform feeding action
+    lastFeedTime = currentTime;  // Update last feed time
+  }
+}
+
+void feedFish() {
+  myservo.write(0);
+  delay(servoDelay);
+  
+  for (int pos = 0; pos <= 180; pos += 1) {
+    myservo.write(pos);
+    delay(servoMoveDuration);
+  }
+  
+  for (int pos = 180; pos >= 0; pos -= 1) {
+    myservo.write(pos);
+    delay(servoMoveDuration);
+  }
+}
+
